@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="../css/LoginStyle.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>WELCOME</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--KNOW THE JQUERY-->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <!--KNOW THE AJAXCALLS FUNCTION-->
+    <script src="../js/ajaxcalls.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        //
+        //url="localhost:7017";
+          url = "proj.ruppin.ac.il/igroup17/test2/tar1"
+
+        $("#registerForm").submit((e) => {
+          e.preventDefault();
+          submitToServer();
+        });
+
+        $(document).on("click", "#BTNBackToLogIn", function () {
+            window.location.href = "/pages/LogIn.html";
+        });
+
+        $("#registerEmail").on("input", function () {
+          let pattern = $(this).attr("pattern");
+          let value = $(this).val();
+          let message =
+            "Please match the requested format: example123@example.com";
+          this.setCustomValidity(value.match(pattern) ? "" : message);
+        });
+
+        $("#registerPassword").on("input", function () {
+          let pattern = $(this).attr("pattern");
+          let value = $(this).val();
+          let message =
+            "Password must contain at least 8 characters, an uppercase letter, and a numbers";
+          this.setCustomValidity(value.match(pattern) ? "" : message);
+        });
+      });
+
+      function submitToServer() {
+        let NewUser = {
+          id: 0,
+          name: $("#registerName").val(),
+          email: $("#registerEmail").val(),
+          password: $("#registerPassword").val(),
+        };
+
+        const api = `https://${url}/api/Users/register`;
+        console.log(NewUser);
+        ajaxCall("POST", api, JSON.stringify(NewUser), postSCB, postECB);
+      }
+
+      function postSCB(status) {
+        if (status === -1) {
+            Swal.fire({
+            icon: "error",
+            title:
+              "This email address already exist, please choose another email",
+            showConfirmButton: false,
+            timer: 4000,
+          });
+    
+        } else {
+            Swal.fire({
+            icon: "success",
+            title:
+              "Register succeed, log in and come inside to discover our game world!",
+            showConfirmButton: false,
+            timer: 4000,
+          }).then(() => {
+            window.location.href = "./LogIn.html";
+          });
+        }
+      }
+
+      function postECB(err) {
+        console.log(err);
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="video-background">
+        <video autoplay muted loop id="bg-video">
+            <source src="../PHOTO/background_video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <!--<div class="background-carousel"></div>-->
+
+   
+
+    <div class="container">
+      <h1 class="forms">Welcome to Your Game Store</h1>
+      <!--<div class="form-container">-->
+        <!-- טופס הרשמה -->
+        <div id="DivRegister">
+          <form id="registerForm">
+            <h2>Register</h2>
+            <label for="registerName">Name:</label>
+            <input
+              type="text"
+              id="registerName"
+              name="registerName"
+              placeholder="Enter your name"
+              required
+            />
+            <label for="registerEmail">Email:</label>
+            <input
+              type="email"
+              id="registerEmail"
+              name="registerEmail"
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+              placeholder="Enter your email"
+              required
+            />
+            <label for="registerPassword">Password:</label>
+            <p>
+              Password must include at least: 1 uppercase letter, 1 digit and
+              minimum 8 characters
+            </p>
+            <input
+              type="password"
+              id="registerPassword"
+              name="registerPassword"
+              pattern="(?=.*[A-Z])(?=.*[0-9]).{8,}"
+              placeholder="min 8 chars, uppercase, numbers"
+              required
+            />
+            <button id="BTNRegister" type="submit">Register</button>
+            <button id="BTNBackToLogIn" type="submit">Back To Log In</button>
+          </form>
+      
+        </div>
+        <!--</div>-->
+      </div>
+    </div>
+  </body>
+</html>

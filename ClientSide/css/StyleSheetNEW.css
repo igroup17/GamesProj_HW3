@@ -1,0 +1,475 @@
+/* עיצוב כללי */
+body {
+  background-color: black;
+  color: white;
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1; /* מאפשר לתוכן להיות מעל הווידאו */
+}
+#bg-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ממלא את כל המסך */
+  transform: translate(-50%, -50%);
+}
+.content {
+  position: relative;
+  z-index: 1; /* תוכן מעל הווידאו */
+}
+/* עיצוב האייקונים */
+.navbar a img {
+  position: flex;
+  width: 40px; /* גודל רוחב מותאם */
+  height: 40px; /* גובה מותאם */
+  margin: 0 0px; /* מרווחים מסביב */
+  transition: transform 0.3s ease; /* אנימציה חלקה */
+}
+
+.navbar a img:hover {
+  transform: scale(1.2); /* הגדלה בהנפה */
+  cursor: pointer; /* מצביע יד */
+}
+h1 {
+  color: #00ffff; /* תורכיז זוהר */
+  font-family: "Press Start 2P", cursive; /* פונט גיימרים */
+  font-size: 3rem;
+  margin-top: 100px;
+  margin-bottom: 40px;
+}
+
+/* קונטיינר כללי */
+#gamesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* מרווחים בין הכרטיסים */
+  padding: 20px;
+}
+
+/* עיצוב כרטיסים */
+.game-card {
+  border: 3px solid #00ffff; /* מסגרת תורכיז זוהרת */
+  border-radius: 10px;
+  background-color: #1a1a1a; /* רקע כהה */
+  padding: 20px;
+  text-align: center;
+  width: 250px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #e0e0e0;
+}
+
+.game-card:hover {
+  transform: scale(1.01); /* הגדלה */
+  box-shadow: 0 0 15px #00ffff; /* זוהר */
+}
+
+.game-title {
+  font-family: "Orbitron", sans-serif; /* פונט גיימרים */
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #00ffff; /* תורכיז זוהר */
+  margin-bottom: 10px;
+}
+
+.game-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+/* כפתורים */
+.btnAddGame,
+.btnDeleteGame {
+  background-color: transparent;
+  color: #00ffff;
+  border: 2px solid white; /* מסגרת לבנה */
+  padding: 10px 15px;
+  font-family: "Orbitron", sans-serif; /* פונט גיימרים */
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: glow 5s infinite linear; /* הפעלת האנימציה */
+  margin-top: 10px;
+}
+
+.btnAddGame:hover,
+.btnDeleteGame:hover {
+  animation-play-state: paused; /* עוצר את האנימציה בעת הנפה */
+  transform: scale(1.1); /* הגדלה בהנפה */
+  box-shadow: 0 0 20px white, 0 0 30px white; /* צל נוסף בהנפה */
+}
+
+/* אנימציית צבעים מתחלפים */
+@keyframes glow {
+  0% {
+    background-color: #ff0000; /* אדום זוהר */
+    border-color: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+    color: white;
+  }
+  20% {
+    background-color: #ffa500; /* כתום זוהר */
+    border-color: #ffa500;
+    box-shadow: 0 0 15px #ffa500;
+    color: white;
+  }
+  40% {
+    background-color: #00ff00; /* ירוק זוהר */
+    border-color: #00ff00;
+    box-shadow: 0 0 15px #00ff00;
+    color: white;
+  }
+  60% {
+    background-color: #0000ff; /* כחול זוהר */
+    border-color: #0000ff;
+    box-shadow: 0 0 15px #0000ff;
+    color: white;
+  }
+  80% {
+    background-color: #8a2be2; /* סגול זוהר */
+    border-color: #8a2be2;
+    box-shadow: 0 0 15px #8a2be2;
+    color: white;
+  }
+  100% {
+    background-color: #ff0000; /* חזרה לאדום */
+    border-color: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+    color: white;
+  }
+}
+
+/* טבלאות פילטרים */
+table {
+  margin: 20px auto;
+  width: 80%;
+  border-collapse: collapse;
+  font-family: "Orbitron", sans-serif;
+}
+
+table td {
+  padding: 10px;
+}
+
+table input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+table button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+}
+
+table button:hover {
+  background-color: #0056b3;
+}
+
+.web-link {
+  color: #d4e1e9; /* צבע טקסט כחול */
+  text-decoration: none; /* מבטל את הקו התחתון */
+  font-weight: bold; /* טקסט מודגש */
+  font-size: 16px; /* גודל גופן */
+}
+
+/* עיצוב הקישור כשהעכבר עליו */
+.web-link:hover {
+  color: #65788b;
+  text-decoration: underline; /* מוסיף קו תחתון כשמעבירים את העכבר */
+}
+
+/* NavBar קבוע */
+.navbar {
+  /*display: sticky;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #5768ad;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;*/
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #133438c0;
+  /* background-color: #756d6d4b;*/
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.welcome-message {
+  margin-right: 15px;
+  font-family: "Orbitron", sans-serif;
+}
+
+#btnEditProfile,
+#btnLogOut {
+  font-family: "Orbitron", sans-serif;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #00ffff;
+}
+
+/*.navbar .button-link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.navbar .button-link a,
+.navbar .button-link button {
+  background-color: transparent;
+  color: #00ffff;
+  border: 2px solid #00ffff;
+  padding: 5px 10px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navbar .button-link button:hover,
+.navbar .button-link a:hover {
+  background-color: #00ffff;
+  color: black;
+}*/
+
+/* תיבת עריכת פרופיל */
+.profile-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #1a1a1a;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00ffff;
+  z-index: 1100;
+  display: none;
+}
+
+.profile-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-modal input {
+  padding: 10px;
+  border: 2px solid #00ffff;
+  border-radius: 5px;
+  background-color: black;
+  color: white;
+}
+
+.profile-modal button,
+#btnEditProfile,
+#btnLogOut,
+#btnScore,
+#btnPrice,
+#btnResetFilters {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #00ffff;
+  color: black;
+  font-family: "Orbitron", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-modal button:hover,
+#btnEditProfile:hover,
+#btnLogOut:hover {
+  background-color: white;
+  color: black;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1050;
+  display: none;
+}
+
+#loveBTN,
+#homeBTN {
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: transparent;
+  color: #00ffff;
+  border: 2px solid #00ffff;
+  padding: 5px 10px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#loveBTN:hover,
+#homeBTN:hover {
+  background-color: #00ffff;
+  color: black;
+}
+
+/* גודל מסך קטן (טלפונים) */
+@media only screen and (max-width: 600px) {
+  body,
+  .web-link {
+    font-size: 10px; /* גופן קטן יותר למסכים קטנים מאוד */
+  }
+
+  .welcome-message {
+    font-size: 0.5rem;
+    margin-right: 0px;
+    font-family: "Orbitron", sans-serif;
+  }
+  p {
+    font-size: 0.5rem; /* כותרת מותאמת למסכים קטנים */
+    margin: 0px 0; /* מרווחים קטנים יותר */
+  }
+  h3 {
+    font-size: 0.5rem; /* כותרת מותאמת למסכים קטנים */
+    margin: 0px 0; /* מרווחים קטנים יותר */
+  }
+  .navbar button {
+    font-size: 0.4rem; /* גודל טקסט קטן יותר */
+    padding: 0px 0px; /* ריווח פנימי קטן יותר */
+    margin-bottom: 10px; /* מרווח אנכי בין כפתורים */
+    width: auto; /* התאמה לגודל תוכן */
+  }
+  h1 {
+    font-size: 1.5rem; /* כותרת מותאמת למסכים קטנים */
+    margin-top: 70px 0; /* מרווחים קטנים יותר */
+  }
+
+  .game-card {
+    width: 20%; /* הכרטיסים יתפסו פחות רוחב כדי לאפשר קצת מרווח */
+    padding: 15px; /* התאמה לגודל קטן יותר */
+  }
+
+  .navbar {
+    flex-direction: row; /* עובר לתצוגה אנכית */
+    align-items: center;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .navbar h1 {
+    font-size: 0.2rem; /* כותרת הניווט קטנה יותר */
+  }
+
+  .btnAddGame,
+  .btnDeleteGame {
+    font-size: 0.5rem; /* כפתורים קטנים יותר */
+    padding: 8px 10px; /* ריווח קטן יותר */
+  }
+  #loveBTN,
+  #homeBTN {
+    width: 10px; /* גודל רוחב קטן יותר */
+    height: 10px; /* גובה קטן יותר */
+    margin: 5px; /* מרווח קטן */
+  }
+  input {
+    font-size: 0.9rem; /* קלט טקסט קטן יותר */
+    padding: 8px; /* ריווח פנימי קטן יותר */
+  }
+
+  #ScoreTB,
+  #PriceTB {
+    width: 60px;
+    margin: 5px;
+    font-size: 0.6rem;
+  }
+
+  #btnScore,
+  #btnPrice,
+  #btnResetFilters {
+    margin: 10px;
+    font-size: 0.5rem; /* כפתורים קטנים יותר */
+    padding: 8px 10px; /* ריווח קטן יותר */
+  }
+
+  #registerForm {
+    max-width: 90%; /* הטופס יתפוס עד 90% מרוחב המסך */
+    padding: 15px; /* ריווח פנימי קטן יותר */
+    margin: 20px auto; /* מרווח מסביב לטופס */
+  }
+
+  #registerForm input,
+  #registerForm button {
+    font-size: 0.9rem; /* גודל טקסט מותאם למובייל */
+    padding: 8px; /* ריווח פנימי קטן */
+  }
+}
+
+/* גודל מסך בינוני (טאבלטים) */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+  body {
+    font-size: 16px;
+  }
+  h1 {
+    font-size: 2.5rem;
+  }
+  .game-card {
+    width: 45%;
+  }
+}
+
+/* גודל מסך גדול (מחשבים נייחים) */
+@media only screen and (min-width: 1025px) {
+  body {
+    font-size: 18px;
+  }
+  h1 {
+    font-size: 3rem;
+  }
+  .game-card {
+    width: 250px;
+  }
+}

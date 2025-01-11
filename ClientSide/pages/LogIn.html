@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="../css/LoginStyle.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>WELCOME</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--KNOW THE JQUERY-->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <!--KNOW THE AJAXCALLS FUNCTION-->
+    <script src="../js/ajaxcalls.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        //
+        //url="localhost:7017";
+        url = "proj.ruppin.ac.il/igroup17/test2/tar1"
+        //
+        $("#loginForm").submit((e) => {
+          e.preventDefault();
+          LogIn();
+        });
+
+        $(document).on("click", "#BTNRegister", function () {
+            window.location.href = "/pages/Register.html";
+        });
+
+      });
+
+      function LogIn() {
+        console.log("Enter Log In");
+        let User = {
+          id: 0,
+          name: "",
+          email: $("#loginEmail").val(),
+          password: $("#loginPassword").val(),
+        };
+
+        const api = `https://${url}/api/Users/login`;
+        console.log(User);
+        ajaxCall("POST", api, JSON.stringify(User), LogInSCB, LogInECB);
+        return false;
+      }
+
+      function LogInSCB(user) {
+        if (user == null) {
+          console.log("from the server in IF NULL:" + user);
+          Swal.fire({
+            icon: "error",
+            title:
+              "It seems like one of the details you entered is incorrect. Please try again.",
+            showConfirmButton: false,
+            timer: 4000,
+          });
+        } else {
+          console.log("from the server in ELSE NOT NULL:" + user);
+          localStorage.setItem("user", JSON.stringify(user)); // saving current user to local storage
+          console.log(
+            "from the local storage:" +
+              JSON.parse(localStorage.getItem("user")).name
+          );
+          Swal.fire({
+            icon: "success",
+            title:
+              "Hello " +
+              JSON.parse(localStorage.getItem("user")).name +
+              ", Login successfully",
+            showConfirmButton: false,
+            timer: 2500,
+          }).then(() => {
+            window.location.href = "./index.html";
+          });
+        }
+      }
+
+      function LogInECB(err) {
+        console.log(err);
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="video-background">
+      <video autoplay muted loop id="bg-video">
+          <source src="../PHOTO/background_video.mp4" type="video/mp4" />
+      </video>
+  </div>
+    <!--<div class="background-carousel"></div>-->
+    <div class="container">
+      <h1 class="forms">Welcome to Your Game Store</h1>
+      <div class="form-container">
+        <div id="DivLogIn">
+          <!-- טופס התחברות -->
+          <form id="loginForm">
+            <h2>Login</h2>
+            <label for="loginEmail">Email:</label>
+            <input
+              type="text"
+              id="loginEmail"
+              name="loginEmail"
+              placeholder="Enter your email"
+              required
+            />
+
+            <label for="loginPassword">Password:</label>
+            <input
+              type="password"
+              id="loginPassword"
+              name="loginPassword"
+              placeholder="Enter your password"
+              required
+            />
+
+            <button id="LogInBTN" type="submit">Login</button>
+          </form>
+    
+        </div>
+        <h2 id="moveToRegister">Not register yet?</h2>
+        <button id="BTNRegister" type="submit">Register</button>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

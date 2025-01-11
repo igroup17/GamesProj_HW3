@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="../css/StyleSheetNEW.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>My Favorite Games</title>
+
+    <!--KNOW THE JQUERY-->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <!--KNOW THE AJAXCALLS FUNCTION-->
+    <script src="../js/ajaxcalls.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        //
+        //url = "localhost:7017";
+        url = "proj.ruppin.ac.il/igroup17/test2/tar1";
+
+        $("#navbar-placeholder").load("navbar.html");
+
+        CurrentUser = JSON.parse(localStorage.getItem("user")); // this is a global variable
+        UserId = CurrentUser.id;
+
+        showGame(UserId);
+
+        $(document).on("click", ".btnDeleteGame", function () {
+          const appId = $(this).data("game");
+          console.log("appIdToServer ", appId);
+          const gameCard = $(this).closest(".game-card");
+          DeleteGame(appId, gameCard);
+        });
+
+        $(document).on("click", "#btnPrice", function () {
+          GetGamesByPrice();
+        });
+
+        $(document).on("click", "#btnScore", function () {
+          GetGamesByScore();
+        });
+      });
+
+      function showGame(UserId) {
+        const api = `https://${url}/api/Games/usersGames/${UserId}`;
+        ajaxCall("GET", api, "", showGameSCB, showGameECB);
+      }
+
+      function showGameSCB(GamesList) {
+        console.log(GamesList);
+        // Clear the gamesContainer before rendering new cards
+        gamesContainer.innerHTML = "";
+
+        GamesList.forEach((game) => {
+          // rendering games cards
+          const gamesContainer = document.getElementById("gamesContainer");
+          const gameCard = document.createElement("div");
+          gameCard.classList.add("game-card");
+          gameCard.setAttribute("data-price", game.price);
+          gameCard.setAttribute("data-score", game.scoreRank);
+
+          gameCard.innerHTML = `
+              <img src=${game.headerImage} alt="${game.name}">
+              <h3>${game.name}</h3>
+              <h3>Number Of Purchases: ${game.numberOfPurchases}</h3> 
+              <p><strong>Game ID Number:</strong> ${game.appID}</p>
+              <p><strong>Release Date:</strong> ${game.releaseDate}</p>
+              <p><strong>Price:</strong> $${game.price}</p>
+              <p><strong>Score:</strong> ${game.scoreRank}</p>
+              <a class="web-link" href="${game.website}" target="_blank">Visit Website</a>
+              <button class="btnDeleteGame" data-game="${game.appID}">DELETE GAME FROM MY LIST</button>`;
+
+          gamesContainer.appendChild(gameCard);
+        });
+      }
+
+      function showGameECB(err) {
+        console.log(err);
+      }
+
+      function DeleteGame(appId, gameCard) {
+        console.log("you got to the deletegame function");
+        const api = `https://${url}/api/Games/deleteGame?AppID=${appId}&userid=${UserId}`;
+        ajaxCall("DELETE", api, "", deleteGameSCB(gameCard), deleteGameECB);
+      }
+
+      function deleteGameSCB(gameCard) {
+        gameCard.remove();
+        Swal.fire({
+          //position: "top-end",
+          icon: "success",
+          title: "The game has been removed from your list !",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+
+      function deleteGameECB(err) {
+        console.log(err);
+      }
+
+      function GetGamesByPrice() {
+        PriceInput = parseFloat($("#PriceTB").val());
+        const api = `https://${url}/api/Games/searchByPrice?minPrice=${PriceInput}`;
+        ajaxCall("GET", api, "", GamesByPriceSCB, GamesByPriceECB);
+      }
+
+      function GamesByPriceSCB(ListByPrice) {
+        let minPrice = parseFloat($("#PriceTB").val());
+        console.log("this is the filtered list:", ListByPrice);
+        $(".game-card").each(function () {
+          gamePrice = parseFloat($(this).data("price"));
+          if (isNaN(gamePrice)) {
+            console.error("Invalid game price:", gamePrice, "Card:", $(this));
+            return;
+          }
+          if (gamePrice < minPrice) {
+            $(this).hide();
+          } else {
+            $(this).show();
+          }
+        });
+      }
+
+      function GamesByPriceECB(err) {
+        console.log(err);
+      }
+
+      function GetGamesByScore() {
+        let ScoreInput = parseInt($("#ScoreTB").val());
+        const api = `https://${url}/api/Games/searchByScore/score/${ScoreInput}`;
+        ajaxCall("GET", api, "", GamesByScoreSCB, GamesByScoreECB);
+      }
+
+      function GamesByScoreSCB(ListByScore) {
+        console.log(ListByScore);
+        let minScore = parseInt($("#ScoreTB").val());
+        console.log("this is the filtered list:", ListByScore);
+        $(".game-card").each(function () {
+          gameScore = parseInt($(this).data("score"));
+          if (isNaN(gameScore)) {
+            console.error("Invalid game score:", gameScore, "Card:", $(this));
+            return;
+          }
+          if (gameScore < minScore) {
+            $(this).hide();
+          } else {
+            $(this).show();
+          }
+        });
+      }
+
+      function GamesByScoreECB(err) {
+        console.log(err);
+      }
+
+      function resetFilters() {
+        $("#PriceTB").val("");
+        $("#ScoreTB").val("");
+        showGame(UserId);
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="video-background">
+      <video autoplay muted loop id="bg-video">
+        <source src="../PHOTO/background_video.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div id="navbar-placeholder"></div>
+
+    <h1>My Favorite Games</h1>
+
+    <table>
+      <tr>
+        <td>Filter by Score</td>
+        <td>
+          <input type="text" id="ScoreTB" placeholder="Enter minimum score" />
+          <button type="submit" id="btnScore">Search</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Filter by Price</td>
+        <td>
+          <input type="text" id="PriceTB" placeholder="Enter minimum price" />
+          <button type="submit" id="btnPrice">Search</button>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <button id="btnResetFilters" onclick="resetFilters()">
+            Reset Filters
+          </button>
+        </td>
+      </tr>
+    </table>
+    <div id="gamesContainer"></div>
+  </body>
+</html>

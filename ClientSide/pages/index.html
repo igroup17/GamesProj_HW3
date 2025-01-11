@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="../css/StyleSheetNEW.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Game Store</title>
+
+    <!--KNOW THE JQUERY-->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <!--KNOW THE AJAXCALLS FUNCTION-->
+    <script src="../js/ajaxcalls.js"></script>
+
+    <script>
+      //
+      //url="localhost:7017"
+      url = "proj.ruppin.ac.il/igroup17/test2/tar1";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const gamesContainer = document.getElementById("gamesContainer");
+
+        function readGames() {
+          const api = `https://${url}/api/Games`;
+          ajaxCall("GET", api, "", readGamesSCB, readGamesECB);
+        }
+
+        function readGamesSCB(Games) {
+          console.log("games loaded successfully from the DB:");
+          console.log(Games);
+          Games.forEach((game) => {
+            const gameCard = document.createElement("div");
+            gameCard.classList.add("game-card");
+
+            gameCard.innerHTML = `
+              <img src="${game.headerImage}" alt="${game.name}">
+              <h3>${game.name}</h3>
+              <h3>Number Of Purchases: ${game.numberOfPurchases}</h3> 
+              <p><strong>Game ID Number:</strong> ${game.appID}</p>
+              <p><strong>Release Date:</strong> ${game.releaseDate}</p>
+              <p><strong>Price:</strong> $${game.price}</p>
+              <p><strong>Score:</strong> ${game.scoreRank}</p>
+              <a class="web-link" href="${game.website}" target="_blank">Visit Website</a>
+              <button class="btnAddGame" data-game="${game.appID}">ADD TO MY LIST</button>`;
+            gamesContainer.appendChild(gameCard);
+          });
+        }
+
+        function readGamesECB(err) {
+          console.log(err);
+        }
+
+        readGames();
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        $("#navbar-placeholder").load("navbar.html");
+
+        CurrentUser = JSON.parse(localStorage.getItem("user"));
+        UserId = CurrentUser.id;
+        console.log(UserId);
+
+        $(document).on("click", ".btnAddGame", function () {
+          //$(".btnAddGame").click(function () {
+          GameId = $(this).data("game"); // retrieving the data from the button. "game" represent the $game.AppID
+
+          console.log("btn clicked");
+          console.log(GameId);
+
+          AddGame(GameId);
+        });
+      });
+
+      function AddGame(gameId) {
+        console.log("arrived to the add game ajax call");
+        const api = `https://${url}/api/Games/${UserId}`;
+        console.log("data being sent:", gameId);
+        ajaxCall("POST", api, JSON.stringify(gameId), postGameSCB, postGameECB);
+      }
+
+      function postGameSCB(status) {
+        console.log(status);
+        if (status > 0) {
+          Swal.fire("The game has been added to your list !");
+        } else {
+          Swal.fire("This game already added to your list");
+        }
+      }
+
+      function postGameECB(err) {
+        Swal.fire("I couldn't add the game to your list");
+        console.log(err);
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="video-background">
+      <video autoplay muted loop id="bg-video">
+        <source src="/PHOTO/background_video.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div id="navbar-placeholder"></div>
+    <h1>Game Store</h1>
+
+    <div id="gamesContainer">
+      <!-- Game cards will go here -->
+    </div>
+  </body>
+</html>

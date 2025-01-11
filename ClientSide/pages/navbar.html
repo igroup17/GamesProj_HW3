@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="../css/StyleSheetNEW.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!--KNOW THE JQUERY-->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <!--KNOW THE AJAXCALLS FUNCTION-->
+    <!--<script src="../js/ajaxcalls.js"></script>-->
+
+    <script>
+      $(document).ready(function () {
+        //
+        //url = "localhost:7017";
+        url = "proj.ruppin.ac.il/igroup17/test2/tar1";
+
+        CurrentUser = JSON.parse(localStorage.getItem("user"));
+
+        $("#update_details_form").submit((e) => {
+          e.preventDefault();
+          submitToServer();
+        });
+
+        const welcomeMessage = document.querySelector(".welcome-message");
+        RenderUpdatedDetails(CurrentUser);
+
+        function submitToServer() {
+          let updateUser = {
+            id: CurrentUser.id,
+            name: $("#updateUserName").val(),
+            email: $("#updateEmail").val(),
+            password: $("#updatePassword").val(),
+          };
+
+          const api = `https://${url}/api/Users/updateUser`;
+          console.log(updateUser);
+          ajaxCall("PUT", api, JSON.stringify(updateUser), putSCB, putECB);
+        }
+
+        function putSCB(updatedUser) {
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          CurrentUser = JSON.parse(localStorage.getItem("user"));
+
+          console.log("Updated user in local storage:", CurrentUser);
+
+          RenderUpdatedDetails(CurrentUser);
+
+          closeProfileModal();
+
+          Swal.fire({
+            icon: "success",
+            title: "succeed",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
+
+        function putECB(err) {
+          console.log(err);
+        }
+
+        function RenderUpdatedDetails(CurrentUser) {
+          $("#updateUserName").val(CurrentUser.name || "");
+          $("#updateEmail").val(CurrentUser.email || "");
+          $("#updatePassword").val(CurrentUser.password || "");
+          $(".welcome-message").text(`Hello, ${CurrentUser.name}`);
+        }
+
+        function openProfileModal() {
+          $(".profile-modal").css("display", "block");
+          $(".modal-overlay").css("display", "block");
+        }
+
+        function closeProfileModal() {
+          $(".profile-modal").css("display", "none");
+          $(".modal-overlay").css("display", "none");
+        }
+
+        $("button:contains('Edit My Profile')").on("click", openProfileModal);
+        $(".modal-overlay").on("click", closeProfileModal);
+        $("button:contains('Cancel')").on("click", closeProfileModal);
+
+        $(document).on("click", "#btnLogOut", function () {
+          Swal.fire({
+            title: "Are you sure?",
+            text: "You are about to log out from your account",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, I want to leave!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire({
+                title: "SEE YOU SOON!",
+                icon: "success",
+                timer: 2500,
+              }).then(() => {
+                window.location.href = "../pages/LogIn.html";
+              });
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="navbar">
+      <span class="welcome-message"></span>
+      <button id="btnEditProfile">Edit My Profile</button>
+      <button id="btnLogOut" type="button">Log Out</button>
+
+      <a class="love" href="../pages/MyGames.html">
+        <img id="loveBTN" src="../PHOTO/love_icon.png" alt="lovePNG" />
+      </a>
+
+      <a class="home" href="../pages/index.html">
+        <img id="homeBTN" src="../PHOTO/home_icon.png" alt="homePNG" />
+      </a>
+    </div>
+
+    <div class="modal-overlay"></div>
+
+    <div class="profile-modal">
+      <form id="update_details_form">
+        <label for="updateUserName">User Name:</label>
+        <input
+          type="text"
+          id="updateUserName"
+          name="username"
+          placeholder="Enter new username"
+        />
+
+        <label for="updateEmail">Email:</label>
+        <input
+          type="email"
+          id="updateEmail"
+          name="email"
+          placeholder="Enter new email"
+        />
+
+        <label for="updatePassword">Password:</label>
+        <input
+          type="text"
+          id="updatePassword"
+          name="password"
+          placeholder="Enter new password"
+        />
+
+        <button id="BtnUpdate" type="submit">Save Changes</button>
+        <button id="BtnCancel" type="button">Cancel</button>
+      </form>
+    </div>
+  </body>
+</html>
